@@ -24,6 +24,10 @@ fi
 echo "正在更新 apt..."
 sudo apt update
 
+# 安装 uuid（生成时间戳）
+echo "安装/升级 uuid..."
+sudo apt -y install uuid || sudo apt -y upgrade uuid
+
 # 安装 unar（解压 .rar/.zip）
 echo "安装/升级 unar..."
 sudo apt -y install unar || sudo apt -y upgrade unar
@@ -35,7 +39,7 @@ SING_BOX_DIR_PATH="${USER_HOME}/openwrt.bak/sing-boxs"
 if [[ ! -d ${SING_BOX_DIR_PATH} && ! -f ${SING_BOX_DIR_PATH} ]]; then
   SING_BOX_DIR=${SING_BOX_DIR_PATH}'/sing-box_config'
 else
-  SING_BOX_DIR_PATH=${SING_BOX_DIR_PATH}-$(uuidgen)
+  SING_BOX_DIR_PATH=${SING_BOX_DIR_PATH}-$(uuid)
   SING_BOX_DIR=${SING_BOX_DIR_PATH}'/sing-box_config'
 fi
 
