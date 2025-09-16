@@ -310,39 +310,39 @@ if [ -f '${SING_BOX_FILE}' ]; then
         else
           .
         end
-      # 4. 插入或修改 DNS UDP 53 inbound
-      | if any(.inbounds[]; .type=="direct" and .network=="udp") then
-          .inbounds |= map(
-            if .type=="direct" and .network=="udp" then
-              .listen_port = 53
-            else
-              .
-            end
-          )
-        else
-          .inbounds += [{
-            "type": "direct",
-            "tag": "dns-in",
-            "listen": "0.0.0.0",
-            "listen_port": 53,
-            "sniff_override_destination": true,
-            "network": "udp"
-          }]
-        end
-    # 5. 在 route.rules 里，凡是有 inbound 数组的，就追加 "dns-in"
-    | .route.rules |= map(
-        if .inbound? and (.inbound | type == "array") then
-          if any(.inbound[]; . == "dns-in") then
-            .
-          else
-            .inbound += ["dns-in"]
-          end
-        else
-          .
-        end
-      )
-    # 6. 去掉 transport.path 里的 ? 之后部分
-    | (.outbounds |= map(
+      ## 4. 插入或修改 DNS UDP 53 inbound
+      #| if any(.inbounds[]; .type=="direct" and .network=="udp") then
+      #    .inbounds |= map(
+      #      if .type=="direct" and .network=="udp" then
+      #        .listen_port = 53
+      #      else
+      #        .
+      #      end
+      #    )
+      #  else
+      #    .inbounds += [{
+      #      "type": "direct",
+      #      "tag": "dns-in",
+      #      "listen": "0.0.0.0",
+      #      "listen_port": 53,
+      #      "sniff_override_destination": true,
+      #      "network": "udp"
+      #    }]
+      #  end
+      ## 5. 在 route.rules 里，凡是有 inbound 数组的，就追加 "dns-in"
+      #| .route.rules |= map(
+      #  if .inbound? and (.inbound | type == "array") then
+      #    if any(.inbound[]; . == "dns-in") then
+      #      .
+      #    else
+      #      .inbound += ["dns-in"]
+      #    end
+      #  else
+      #    .
+      #  end
+      #)
+      # 6. 去掉 transport.path 里的 ? 之后部分
+      | (.outbounds |= map(
         if .transport?.path? then
           .transport.path |= sub("\\\\?.*"; "")
         else
