@@ -407,8 +407,9 @@ net.ipv6.conf.default.use_tempaddr=1
 
 ip_forward
 
-# 刷新缓存
-sudo resolvectl flush-caches
+# 刷新缓存重启 dnsmasq 当然系统不一定有
+sudo systemctl restart dnsmasq || true
+sudo resolvectl flush-caches || true
 
 sudo '${SING_BOX_BIN_FILE_RENAME}' -c '${SING_BOX_FILE}' format > '${SING_BOX_FILE}.tmp' && mv '${SING_BOX_FILE}.tmp' '${SING_BOX_FILE}'
 sudo pkill -f 'sing-box -D' || true
