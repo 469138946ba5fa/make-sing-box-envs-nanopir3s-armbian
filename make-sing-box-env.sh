@@ -24,6 +24,10 @@ fi
 echo "正在更新 apt..."
 sudo apt update
 
+# 安装 unzip（解压 .zip）
+echo "安装/升级 uuid..."
+sudo apt -y install unzip || sudo apt -y upgrade unzip
+
 # 安装 uuid（生成时间戳）
 echo "安装/升级 uuid..."
 sudo apt -y install uuid || sudo apt -y upgrade uuid
