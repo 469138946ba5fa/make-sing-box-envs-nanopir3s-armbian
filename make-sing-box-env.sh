@@ -214,7 +214,7 @@ jq '[.outbounds[] | select(.server != null and .server != "")]' '$TMP_FILE' > '$
 # 将节点全部插入到 `.outbounds`
 jq --argjson new_nodes "\$(cat '$NODES')" '
   .outbounds += \$new_nodes
-' '$SING_BOX_CONFIG_TEMPLATES_FILE' > config_tmp.json && mv config_tmp.json '$NODES_CONFIG'
+' '$SING_BOX_CONFIG_TEMPLATES_FILE' > config_tmp.json && mv -fv config_tmp.json '$NODES_CONFIG'
 [ ! -f "$NODES_CONFIG" ] && echo "节点配置文件不存在：$NODES_CONFIG" && exit 1
 
 # 将节点名全部插入到 自动
@@ -226,7 +226,7 @@ jq --argjson new_nodes "\$(cat '$NODES')" '
       .
     end
   )
-' '$NODES_CONFIG' > config_tmp.json && mv config_tmp.json '$NODES_CONFIG'
+' '$NODES_CONFIG' > config_tmp.json && mv -fv config_tmp.json '$NODES_CONFIG'
 
 # 将节点名全部插入到 手动
 jq --argjson new_nodes "\$(cat '$NODES')" '
@@ -237,7 +237,7 @@ jq --argjson new_nodes "\$(cat '$NODES')" '
       .
     end
   )
-' '$NODES_CONFIG' > config_tmp.json && mv config_tmp.json '$NODES_CONFIG'
+' '$NODES_CONFIG' > config_tmp.json && mv -fv config_tmp.json '$NODES_CONFIG'
 
 # 遍历分组定义文件，每行格式：tag|pattern
 while IFS='|' read -r tag pattern; do
@@ -265,7 +265,7 @@ while IFS='|' read -r tag pattern; do
         tag: \$tag,
         outbounds: \$outbounds
       }]
-    ' '$NODES_CONFIG' > config_tmp.json && mv config_tmp.json '$NODES_CONFIG'
+    ' '$NODES_CONFIG' > config_tmp.json && mv -fv config_tmp.json '$NODES_CONFIG'
   else
     echo "  ➤ 分组已存在，更新节点列表"
     jq --arg tag "\$tag" --argjson outbounds "\$matched" '
@@ -276,7 +276,7 @@ while IFS='|' read -r tag pattern; do
           .
         end
       )
-    ' '$NODES_CONFIG' > config_tmp.json && mv config_tmp.json '$NODES_CONFIG'
+    ' '$NODES_CONFIG' > config_tmp.json && mv -fv config_tmp.json '$NODES_CONFIG'
   fi
 done < '$GROUPS_FILE'
 
@@ -349,7 +349,7 @@ if [ -f '${SING_BOX_FILE}' ]; then
           .
         end
       ))
-    ' '${SING_BOX_FILE}' > '${SING_BOX_FILE}.tmp' && mv '${SING_BOX_FILE}.tmp' '${SING_BOX_FILE}'
+    ' '${SING_BOX_FILE}' > '${SING_BOX_FILE}.tmp' && mv -fv '${SING_BOX_FILE}.tmp' '${SING_BOX_FILE}'
 else
   echo "Error: ${SING_BOX_FILE} is not exist. Exiting."
   exit 3
@@ -411,7 +411,7 @@ ip_forward
 sudo systemctl restart dnsmasq || true
 sudo resolvectl flush-caches || true
 
-sudo '${SING_BOX_BIN_FILE_RENAME}' -c '${SING_BOX_FILE}' format > '${SING_BOX_FILE}.tmp' && mv '${SING_BOX_FILE}.tmp' '${SING_BOX_FILE}'
+sudo '${SING_BOX_BIN_FILE_RENAME}' -c '${SING_BOX_FILE}' format > '${SING_BOX_FILE}.tmp' && mv -fv '${SING_BOX_FILE}.tmp' '${SING_BOX_FILE}'
 sudo pkill -f 'sing-box -D' || true
 sudo '${SING_BOX_BIN_FILE_RENAME}' -D '${SING_BOX_DIR}' -c '${SING_BOX_FILE}' run
 IFS=\$IFS_BAK
