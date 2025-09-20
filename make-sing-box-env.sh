@@ -39,7 +39,7 @@ sudo apt -y install unar || sudo apt -y upgrade unar
 echo "所有工具安装完成"
 
 USER_HOME="$HOME"
-SING_BOX_DIR_PATH="${USER_HOME}/openwrt.bak/sing-boxs"
+SING_BOX_DIR_PATH="${USER_HOME}/Desktop/sing-boxs"
 if [[ ! -d ${SING_BOX_DIR_PATH} && ! -f ${SING_BOX_DIR_PATH} ]]; then
   SING_BOX_DIR=${SING_BOX_DIR_PATH}'/sing-box_config'
 else
